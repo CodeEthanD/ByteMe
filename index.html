@@ -948,7 +948,7 @@
                     
                     // Simple alert for demo purposes
                     if (this.textContent.includes('Get Started')) {
-                        alert('Welcome to ByteMe! This would open the secure signup flow in a real application.');
+                        window.location.href = 'login.html';
                     } else if (this.textContent.includes('Watch Demo')) {
                         alert('This would play an introductory video about ByteMe.');
                     } else if (this.textContent.includes('Login')) {
@@ -1013,4 +1013,5 @@
         });
     </script>
 </body>
+
 </html>
