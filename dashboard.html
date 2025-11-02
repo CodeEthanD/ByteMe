@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByteMe - Digital Finance Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+:root {
+    --royal-blue: #1f3bb3;
+    --royal-blue-dark: #162b85;
+    --light-blue-bg: #e8f0ff;
+    --white: #ffffff;
+    --text-grey: #707070;
+            --royal-blue: #1A4DB3;
+            --royal-blue-dark: #0F3A8C;
+            --light-blue: #E8F1FF;
+            --white: #FFFFFF;
+            --gray-900: #111827;
+            --gray-800: #1F2937;
+            --gray-600: #4B5563;
+            --gray-400: #9CA3AF;
+            --gray-200: #E5E7EB;
+            --gray-100: #F3F4F6;
+            --red: #EF4444;
+            --green: #10B981;
+        }
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: var(--light-blue);
+            color: var(--gray-800);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* ===================== Dashboard Layout ===================== */
+        .dashboard {
+            min-height: 100vh;
+        }
+
+        /* ===================== Navbar ===================== */
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 0 25px 5px #686de0;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            
+        }
+
+        .logo {
+            color: var(--royal-blue);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 26px;
+        }
+
+        .welcome-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 18px;
+        }
+
+        .nav-icon {
+            font-size: 22px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-icon:hover {
+            transform: scale(1.15);
+        }
+
+        /* ===================== Sidebar ===================== */
+.sidebar {
+    background-color: white;
+    width: 230px;
+    padding: 30px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    border-right: 1px solid #d3e0ff;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--text-grey);
+    padding: 12px 18px;
+    width: 85%;
+    border-radius: 12px;
+    margin: 10px 0;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+    background-color: var(--light-blue-bg);
+    color: var(--royal-blue-dark);
+    box-shadow: 0 2px 6px rgba(31, 59, 179, 0.15);
+    transform: translateX(4px);
+}
+
+.sidebar-icon {
+    font-size: 22px;
+    color: var(--text-grey);
+    transition: color 0.3s ease;
+}
+
+.sidebar-item:hover .sidebar-icon,
+.sidebar-item.active .sidebar-icon {
+    color: var(--royal-blue-dark);
+}
+
+.sidebar-text {
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+
+        /* ===================== Main Content ===================== */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        /* ===================== Sections ===================== */
+        .section {
+            background-color: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 0px;
+            color: var(--royal-blue);
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-bottom: 20px;
+        }
+
+        /* ===================== Cards ===================== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        /* NEW: Grid for Financial Insights with 2 columns */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        /* NEW: Grid for Payment Center */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--gray-100);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--royal-blue);
+        }
+
+        .card-change {
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .positive {
+            color: var(--green);
+        }
+
+        .negative {
+            color: var(--red);
+        }
+
+        /* NEW: Chart container styling */
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        /* ===================== Table ===================== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 14px 10px;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 16px;
+        }
+
+        th {
+            color: var(--royal-blue);
+            font-weight: 600;
+        }
+
+        .status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .status-success {
+            background-color: rgba(16, 185, 129, 0.12);
+            color: var(--green);
+        }
+
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.12);
+            color: #F59E0B;
+        }
+
+        .status-failed {
+            background-color: rgba(239, 68, 68, 0.12);
+            color: var(--red);
+        }
+
+        /* ===================== Scam Detector ===================== */
+        .scam-result {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .scam-safe {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--green);
+            border: 2px solid var(--green);
+        }
+
+        .scam-warning {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--red);
+            border: 2px solid var(--red);
+        }
+
+        /* ===================== Input & Buttons ===================== */
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-field {
+            flex: 1;
+            height: 55px;
+            padding: 0 18px;
+            font-size: 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            background-color: var(--white);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: var(--royal-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 77, 179, 0.1);
+        }
+
+        .btn {
+            height: 55px;
+            padding: 0 25px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--royal-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--royal-blue-dark);
+            box-shadow: 0 5px 15px rgba(26, 77, 179, 0.3);
+        }
+
+        /* ===================== Chat ===================== */
+        .chat-container {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--gray-100);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background-color: var(--light-blue);
+        }
+
+        .message {
+            margin-bottom: 18px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            margin-left: auto;
+            background-color: var(--royal-blue);
+            color: var(--white);
+            padding: 12px 18px;
+            border-radius: 18px 18px 0 18px;
+        }
+
+        .ai-message {
+            background-color: var(--white);
+            color: var(--gray-900);
+            padding: 12px 18px;
+            border-radius: 18px 18px 18px 0;
+            border: 1px solid var(--gray-100);
+        }
+
+        /* ===================== Education Cards ===================== */
+        .education-card {
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .education-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===================== Modal ===================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 25px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--royal-blue);
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--gray-600);
+        }
+
+        /* ===================== Footer ===================== */
+        footer {
+            background-color: var(--white);
+            padding: 25px;
+            text-align: center;
+            color: var(--gray-600);
+            font-size: 16px;
+            border-top: 1px solid var(--gray-100);
+            border-radius: 0 0 20px 20px;
+        }
+
+        /* ===================== Responsive ===================== */
+        @media (max-width: 1024px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 15px 0;
+            }
+
+            .sidebar-item {
+                padding: 10px 0;
+                width: auto;
+            }
+
+            .sidebar-text {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .welcome-text {
+                font-size: 16px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .card-grid, .insights-grid, .payment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-value {
+                font-size: 26px;
+            }
+
+            th, td {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-icons {
+                gap: 12px;
+            }
+
+            .nav-icon {
+                font-size: 18px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .chat-container {
+                height: 300px;
+            }
+        }
+
+        .card-payment {
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 320px;
+}
+
+.form-group {
+  margin-top: 10px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  width: 280px;
+}
+
+.pin-inputs {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+.pin-box {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+#toast {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #1A4DB3;
+  color: #fff;
+  text-align: center;
+  border-radius: 10px;
+  padding: 10px;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  font-size: 16px;
+  transition: 0.4s;
+}
+
+#toast.show {
+  visibility: visible;
+  transform: translateY(-10px);
+  opacity: 1;
+}
+
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body class="dashboard">
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">ByteMe</div>
+        <div class="welcome-text" id="welcomeText">Welcome, User</div>
+        <div class="nav-icons">
+            <div class="nav-icon">🔔</div>
+            <div class="nav-icon">⚙️</div>
+            <div class="nav-icon" id="logoutBtn">🚪</div>
+        </div>
+    </nav>
+
+    <div style="display:flex">
+        <!-- Sidebar Navigation -->
+<aside class="sidebar">
+    <a href="#overview" class="sidebar-item active">
+        <i class="fa-solid fa-gauge sidebar-icon"></i>
+        <div class="sidebar-text">Dashboard</div>
+    </a>
+    <a href="#ai-advisor" class="sidebar-item">
+        <i class="fa-solid fa-robot sidebar-icon"></i>
+        <div class="sidebar-text">AI Advisor</div>
+    </a>
+    <a href="#payments" class="sidebar-item">
+        <i class="fa-solid fa-credit-card sidebar-icon"></i>
+        <div class="sidebar-text">Payments</div>
+    </a>
+    <a href="#insights" class="sidebar-item">
+        <i class="fa-solid fa-chart-line sidebar-icon"></i>
+        <div class="sidebar-text">Insights</div>
+    </a>
+    <a href="#security" class="sidebar-item">
+        <i class="fa-solid fa-shield-halved sidebar-icon"></i>
+        <div class="sidebar-text">Security</div>
+    </a>
+    <a href="#education" class="sidebar-item">
+        <i class="fa-solid fa-book-open sidebar-icon"></i>
+        <div class="sidebar-text">Education</div>
+    </a>
+</aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+                    <div class="card-grid" style="margin-bottom:20px;">
+                        <div class="card">
+                            <div class="card-title">💰 Account Balance</div>
+                            <div class="card-value" id="accountBalance">₹45,230</div>
+                            <div class="card-change positive">+5.2% from last month</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">🪙 Monthly Spend</div>
+                            <div class="card-value" id="monthlySpend">₹12,450</div>
+                            <div class="card-change negative">-2.1% from last month</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">📈 Savings Progress</div>
+                            <div class="card-value" id="savingsProgress">₹78,500</div>
+                            <div class="card-change positive">+8.7% from last month</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">📈 Savings Progress</div>
+                            <div class="card-value" id="savingsProgress">₹78,500</div>
+                            <div class="card-change positive">+8.7% from last month</div>
+                        </div>
+                    </div>
+
+            <div style="display:flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;">
+                <!-- Financial Overview -->
+                <section id="overview" class="section" style="flex: 1 1 70%;">
+                    <h2 class="section-title">Financial Overview</h2>
+
+                    <div class="insights-grid" style="height:310px;">
+                            <div class="chart-container">
+                                <canvas id="expenseChart"></canvas>
+                            </div>
+                    </div>
+                </section>
+
+                <!-- AI Finance Advisor -->
+                <section id="ai-advisor" class="section" style="flex: 1 1 30%;">
+                    <h2 class="section-title">AI Finance Advisor</h2>
+                    <p class="section-subtitle">Get simple, clear financial insights and answers.</p>
+
+                    <div class="chat-container" id="chatContainer">
+                        <div class="message ai-message">
+                        Hello! I'm your ByteMe AI Advisor 💬. How can I help with your finances today?
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <input
+                        type="text"
+                        class="input-field"
+                        id="aiInput"
+                        placeholder="Type your question..."
+                        />
+                        <button class="btn btn-primary" id="askAiBtn"><i class="fa-solid fa-keyboard"></i></button>
+                    </div>
+                </section>
+
+
+            </div>
+
+            <!-- Smart Payment Center -->
+            <div style="display:flex;gap:20px;margin-bottom:15px;">
+                <div class="card-payment" style="width:30%;">
+                            <h2 class="section-title" style="margin-bottom:20px !important;">Smart Payment Center</h2>
+                            <p>Transfer money instantly with a secure 4-digit PIN.</p>
+
+                            <form id="paymentForm">
+                                <div class="form-group">
+                                <label>Receiver ID</label>
+                                <input type="text" id="receiverId" class="form-control" placeholder="Enter receiver's ID" required>
+                                </div>
+
+                                <div class="form-group">
+                                <label>Amount (₹)</label>
+                                <input type="number" id="amount" class="form-control" placeholder="Enter amount" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Make Payment</button>
+                            </form>
+                        </div>        
+                
+                <div class="card-payment" style="width:30%;">
+                            <h2 class="section-title" style="margin-bottom:20px !important;">Loan Application</h2>
+                            <p>Get your application checked within minutes by assistants.</p>
+
+                            <form id="loanForm">
+                                <div class="form-group">
+                                <label>Reason</label>
+                                <input type="text" id="reason" class="form-control" placeholder="Enter receiver's ID" required>
+                                </div>
+
+                                <div class="form-group">
+                                <label>Amount (₹)</label>
+                                <input type="number" id="amount" class="form-control" placeholder="Enter amount" required>
+                                </div>
+
+                                <div class="form-group">
+                                <label>Term (yrs)</label>
+                                <input type="number" id="amount" class="form-control" placeholder="Enter time:" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Send Application</button>
+                            </form>
+                        </div>
+
+                        <!-- Modal for PIN -->
+                        <div id="pinModal" class="modal">
+                            <div class="modal-content">
+                                <h4>Enter 4-Digit PIN</h4>
+                                <div class="pin-inputs">
+                                <input type="password" maxlength="1" class="pin-box" />
+                                <input type="password" maxlength="1" class="pin-box" />
+                                <input type="password" maxlength="1" class="pin-box" />
+                                <input type="password" maxlength="1" class="pin-box" />
+                                </div>
+                                <div class="modal-actions">
+                                <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                                <button id="confirmBtn" class="btn btn-success">Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Toast -->
+                        <div id="toast">Payment Transferred Successfully 💸</div>
+
+
+                    <div class="card" style="width:40%;">
+
+                        <h3 class="card-title">Recent Transactions</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTable">
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+
+            <!-- Financial Insights -->
+            <section id="insights" class="section">
+                <h2 class="section-title">Financial Insights</h2>
+                
+                <div class="insights-grid">
+                    <div class="card">
+                        <h3 class="card-title">Spending Trend</h3>
+                        <div class="chart-container">
+                            <canvas id="spendingChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Savings vs Expense</h3>
+                        <div class="chart-container">
+                            <canvas id="savingsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scam & Fraud Checker -->
+            <section id="security" class="section">
+                <h2 class="section-title">Scam & Fraud Checker</h2>
+                <p class="section-subtitle">Paste a suspicious message or link to check for potential scams.</p>
+                
+                <div class="input-group">
+                    <input type="text" class="input-field" id="scamInput" placeholder="Paste a suspicious message or link">
+                    <button class="btn btn-primary" id="checkScamBtn">Check Now</button>
+                </div>
+                
+                <div id="scamResult" class="scam-result" style="display: none;"></div>
+            </section>
+
+            <!-- Education & Help Corner -->
+            <section id="education" class="section">
+                <h2 class="section-title">Education & Help Corner</h2>
+                
+                <div class="card-grid">
+                    <div class="card education-card" data-modal="upi-modal">
+                        <h3 class="card-title">How to Use UPI Safely</h3>
+                        <p>Learn best practices for secure UPI transactions.</p>
+                    </div>
+                    
+                    <div class="card education-card" data-modal="receipts-modal">
+                        <h3 class="card-title">Understanding Digital Receipts</h3>
+                        <p>How to verify and store digital payment receipts.</p>
+                    </div>
+                    
+                    <div class="card education-card" data-modal="scams-modal">
+                        <h3 class="card-title">Recognizing Online Scams</h3>
+                        <p>Identify common tactics used by online scammers.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        © 2025 ByteMe | Empowering Digital Trust for Everyone
+    </footer>
+
+    <!-- Education Modals -->
+    <div id="upi-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title">How to Use UPI Safely</h3>
+            <p>1. Always verify the recipient's name before sending money.</p>
+            <p>2. Never share your UPI PIN with anyone.</p>
+            <p>3. Use official UPI apps from trusted sources only.</p>
+        </div>
+    </div>
+
+    <div id="receipts-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title">Understanding Digital Receipts</h3>
+            <p>1. Digital receipts contain transaction details like amount, date, and reference number.</p>
+            <p>2. Always save receipts for future reference and dispute resolution.</p>
+            <p>3. Verify that receipt details match your transaction before confirming.</p>
+        </div>
+    </div>
+
+    <div id="scams-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title">Recognizing Online Scams</h3>
+            <p>1. Be wary of unsolicited messages asking for personal information.</p>
+            <p>2. Scammers often create urgency to pressure you into quick decisions.</p>
+            <p>3. Verify any unusual requests by contacting the organization directly.</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set user name from localStorage or default
+            const currentUser = JSON.parse(localStorage.getItem('byteMeCurrentUser') || '{"fullName": "User"}');
+            document.getElementById('welcomeText').textContent = `Welcome, ${currentUser.fullName}`;
+            
+            // Initialize financial data
+            updateFinancialData();
+            
+            // Initialize transactions table
+            initializeTransactions();
+            
+            // Initialize charts
+            initializeCharts();
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+        
+        // Update financial data with random values
+        function updateFinancialData() {
+            const balance = Math.floor(Math.random() * 50000) + 20000;
+            const spend = Math.floor(Math.random() * 20000) + 5000;
+            const savings = Math.floor(Math.random() * 100000) + 50000;
+            
+            document.getElementById('accountBalance').textContent = `₹${balance.toLocaleString()}`;
+            document.getElementById('monthlySpend').textContent = `₹${spend.toLocaleString()}`;
+            document.getElementById('savingsProgress').textContent = `₹${savings.toLocaleString()}`;
+        }
+        
+        // Initialize transactions table with fake data
+        function initializeTransactions() {
+            const transactions = [
+                { date: '2023-10-15', description: 'Grocery Store', amount: '₹1,250', status: 'Completed' },
+                { date: '2023-10-12', description: 'Mobile Recharge', amount: '₹499', status: 'Completed' },
+                { date: '2023-10-10', description: 'Electricity Bill', amount: '₹2,340', status: 'Completed' },
+                { date: '2023-10-08', description: 'Online Shopping', amount: '₹3,899', status: 'Pending' },
+                { date: '2023-10-05', description: 'Restaurant Payment', amount: '₹1,750', status: 'Completed' }
+            ];
+            
+            const tableBody = document.getElementById('transactionsTable');
+            tableBody.innerHTML = '';
+            
+            transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                
+                // Determine status class
+                let statusClass = 'status-success';
+                if (transaction.status === 'Pending') statusClass = 'status-pending';
+                if (transaction.status === 'Failed') statusClass = 'status-failed';
+                
+                row.innerHTML = `
+                    <td>${transaction.date}</td>
+                    <td>${transaction.description}</td>
+                    <td>${transaction.amount}</td>
+                    <td><span class="status ${statusClass}">${transaction.status}</span></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            // Spending Trend Chart (Line)
+            const spendingCtx = document.getElementById('spendingChart').getContext('2d');
+            new Chart(spendingCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    datasets: [{
+                        label: 'Monthly Spending',
+                        data: [12000, 19000, 15000, 18000, 12000, 17000, 14000, 16000, 19000, 12500],
+                        borderColor: '#1A4DB3',
+                        backgroundColor: 'rgba(26, 77, 179, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 16,
+                                    family: "'Nunito Sans', sans-serif"
+                                }
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                size: 14,
+                                family: "'Nunito Sans', sans-serif"
+                            },
+                            titleFont: {
+                                size: 14,
+                                family: "'Nunito Sans', sans-serif"
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    size: 14,
+                                    family: "'Nunito Sans', sans-serif"
+                                },
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 14,
+                                    family: "'Nunito Sans', sans-serif"
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Savings vs Expense Chart (Bar)
+            const savingsCtx = document.getElementById('savingsChart').getContext('2d');
+            new Chart(savingsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    datasets: [
+                        {
+                            label: 'Savings',
+                            data: [15000, 12000, 18000, 14000, 16000, 19000, 17000, 13000, 15000, 18000],
+                            backgroundColor: '#10B981',
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Expenses',
+                            data: [12000, 19000, 15000, 18000, 12000, 17000, 14000, 16000, 19000, 12500],
+                            backgroundColor: '#1A4DB3',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 16,
+                                    family: "'Nunito Sans', sans-serif"
+                                }
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                size: 14,
+                                family: "'Nunito Sans', sans-serif"
+                            },
+                            titleFont: {
+                                size: 14,
+                                family: "'Nunito Sans', sans-serif"
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    size: 14,
+                                    family: "'Nunito Sans', sans-serif"
+                                },
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 14,
+                                    family: "'Nunito Sans', sans-serif"
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+            new Chart(expenseCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+        datasets: [
+            {
+                label: 'Monthly Savings',
+                data: [8000, 9000, 7500, 9500, 10000, 11000, 9000, 10500, 9500, 11500],
+                borderColor: '#00B050', // Green
+                backgroundColor: 'rgba(0, 176, 80, 0.1)',
+                borderWidth: 3,
+                tension: 0.3,
+                fill: true
+            },
+            {
+                label: 'Monthly Expenses',
+                data: [12000, 19000, 15000, 18000, 12000, 17000, 14000, 16000, 19000, 12500],
+                borderColor: '#E63946', // Red
+                backgroundColor: 'rgba(230, 57, 70, 0.1)',
+                borderWidth: 3,
+                tension: 0.3,
+                fill: true
+            },
+            {
+                label: 'Loan Repayments',
+                data: [5000, 4500, 4800, 4600, 4700, 4900, 5200, 5300, 5400, 5100],
+                borderColor: '#1A4DB3', // Blue
+                backgroundColor: 'rgba(26, 77, 179, 0.1)',
+                borderWidth: 3,
+                tension: 0.3,
+                fill: true
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: {
+                    font: {
+                        size: 14,
+                        family: "'Nunito Sans', sans-serif"
+                    }
+                }
+            },
+            tooltip: {
+                bodyFont: {
+                    size: 14,
+                    family: "'Nunito Sans', sans-serif"
+                },
+                titleFont: {
+                    size: 14,
+                    family: "'Nunito Sans', sans-serif"
+                },
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': ₹' + context.parsed.y.toLocaleString();
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 22000, // set slightly above your highest value
+                ticks: {
+                    stepSize: 2000, // increase this to add more space between grid lines
+                    font: {
+                        size: 13,
+                        family: "'Nunito Sans', sans-serif"
+                    },
+                    callback: function(value) {
+                        return '₹' + value.toLocaleString();
+                    }
+                },
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.1)'
+                }
+            },
+            x: {
+                ticks: {
+                    font: {
+                        size: 13,
+                        family: "'Nunito Sans', sans-serif"
+                    }
+                },
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.1)'
+                }
+            }
+        }
+    }
+});
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('byteMeCurrentUser');
+                    window.location.href = 'login.html';
+                }
+            });
+
+            // AI Advisor
+            document.getElementById('askAiBtn').addEventListener('click', askAI);
+            document.getElementById('aiInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') askAI();
+            });
+
+            // Scam Checker
+            document.getElementById('checkScamBtn').addEventListener('click', checkScam);
+
+            // Education modals
+            document.querySelectorAll('.education-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const modalId = this.getAttribute('data-modal');
+                    document.getElementById(modalId).style.display = 'flex';
+                });
+            });
+
+            // Close modals
+            document.querySelectorAll('.modal-close').forEach(closeBtn => {
+                closeBtn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+
+            // Smooth scrolling for sidebar links
+            document.querySelectorAll('.sidebar-item').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Refresh financial data every 30 seconds
+            setInterval(updateFinancialData, 30000);
+        }
+
+        // AI Advisor function
+        async function askAI() {
+            const input = document.getElementById('aiInput');
+            const question = input.value.trim();
+            
+            if (!question) return;
+            
+            // Add user message to chat
+            addMessageToChat(question, 'user');
+            input.value = '';
+            
+            // Show loading indicator
+            const loadingId = addMessageToChat('Thinking...', 'ai');
+            
+            try {
+                // Call Gemini API
+                const response = await askGemini(question);
+                
+                // Replace loading message with actual response
+                replaceMessage(loadingId, response, 'ai');
+            } catch (error) {
+                replaceMessage(loadingId, 'Sorry, I encountered an error. Please try again.', 'ai');
+            }
+        }
+        
+        // Add message to chat
+        function addMessageToChat(text, sender) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageId = 'msg-' + Date.now();
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.id = messageId;
+            messageDiv.textContent = text;
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            return messageId;
+        }
+        
+        // Replace message in chat (for loading states)
+        function replaceMessage(id, text, sender) {
+            const messageDiv = document.getElementById(id);
+            if (messageDiv) {
+                messageDiv.textContent = text;
+                messageDiv.className = `message ${sender}-message`;
+                
+                const chatContainer = document.getElementById('chatContainer');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+        
+        // Gemini API integration
+        async function askGemini(prompt) {
+            try {
+                const response = await fetch(
+                    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCKejvhC-CQAADxHCFvhB2Ito8dklBgcmQ",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            contents: [
+                                {
+                                    role: "user",
+                                    parts: [{ 
+                                        text: `You are ByteMe AI financial advisor. Provide simple, clear financial advice suitable for elderly users. Keep responses under 150 words. User question: ${prompt}` 
+                                    }]
+                                }
+                            ],
+                            generationConfig: {
+                                temperature: 0.7,
+                                maxOutputTokens: 150,
+                            }
+                        }),
+                    }
+                );
+
+                const data = await response.json();
+                const aiResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text || "I'm not sure how to help with that. Could you please ask about savings, budgeting, or digital payments?";
+                return aiResponse;
+            } catch (err) {
+                console.error("Error calling Gemini API:", err);
+                return "I'm having trouble connecting right now. Please check your internet connection and try again.";
+            }
+        }
+        
+        // Scam checker function
+        function checkScam() {
+            const input = document.getElementById('scamInput');
+            const text = input.value.toLowerCase().trim();
+            const resultDiv = document.getElementById('scamResult');
+            
+            if (!text) {
+                alert('Please enter a message to check.');
+                return;
+            }
+            
+            // Enhanced scam detection
+            const scamKeywords = [
+                'money', 'otp', 'click here', 'urgent', 'password', 'bank details', 
+                'win', 'prize', 'lottery', 'free', 'guaranteed', 'limited time',
+                'account suspended', 'verify', 'immediately', 'congratulations',
+                'risk', 'security', 'unauthorized', 'action required'
+            ];
+            
+            const highRiskPatterns = [
+                /send.*money/i,
+                /provide.*otp/i,
+                /click.*link/i,
+                /urgent.*action/i,
+                /verify.*account/i
+            ];
+            
+            const hasScamKeywords = scamKeywords.some(keyword => text.includes(keyword));
+            const hasHighRiskPattern = highRiskPatterns.some(pattern => pattern.test(text));
+            const keywordCount = scamKeywords.filter(keyword => text.includes(keyword)).length;
+            
+            let riskLevel = 'safe';
+            let message = '✅ Safe: This message appears to be legitimate.';
+            
+            if (hasHighRiskPattern || keywordCount >= 3) {
+                riskLevel = 'high';
+                message = '🚨 High Risk: This appears to be a scam! Do not respond or click any links.';
+            } else if (hasScamKeywords || keywordCount >= 2) {
+                riskLevel = 'medium';
+                message = '⚠️ Suspicious: Be cautious. This message shows potential scam indicators.';
+            }
+            
+            resultDiv.textContent = message;
+            resultDiv.className = `scam-result scam-${riskLevel}`;
+            resultDiv.style.display = 'block';
+        }
+
+        const form = document.getElementById('paymentForm');
+const modal = document.getElementById('pinModal');
+const confirmBtn = document.getElementById('confirmBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const toast = document.getElementById('toast');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  modal.style.display = 'flex';
+  document.querySelector('.pin-box').focus();
+});
+
+cancelBtn.onclick = () => {
+  modal.style.display = 'none';
+};
+
+confirmBtn.onclick = () => {
+  modal.style.display = 'none';
+  showToast();
+  setTimeout(() => location.reload(), 2000);
+};
+
+function showToast() {
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// Auto jump between PIN boxes
+document.querySelectorAll('.pin-box').forEach((box, i, arr) => {
+  box.addEventListener('input', () => {
+    if (box.value.length === 1 && i < arr.length - 1) arr[i + 1].focus();
+  });
+});
+
+    </script>
+</body>
+</html>
